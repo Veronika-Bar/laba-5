@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
-	// "sync"
 )
+
+var wg sync.WaitGroup
 
 func work() {
 	time.Sleep(time.Millisecond * 50)
@@ -12,5 +14,14 @@ func work() {
 }
 
 func main() {
-	// необходимо в отдельных горутинах вызвать функцию work() 10 раз и дождаться результатов выполнения вызванных функций
+	// Запускаем 10 горутин
+	for i := 0; i < 10; i++ {
+		wg.Add(1) // Увеличиваем счетчик горутин
+		go func() {
+			defer wg.Done() // Уменьшаем счетчик после завершения работы горутины
+			work()
+		}()
+	}
+
+	wg.Wait()
 }
