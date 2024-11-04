@@ -3,25 +3,25 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
-var wg sync.WaitGroup
-
 func work() {
-	time.Sleep(time.Millisecond * 50)
-	fmt.Println("done")
+	fmt.Println("Работа выполнена")
 }
 
 func main() {
+	var wg sync.WaitGroup
+
 	// Запускаем 10 горутин
 	for i := 0; i < 10; i++ {
 		wg.Add(1) // Увеличиваем счетчик горутин
 		go func() {
 			defer wg.Done() // Уменьшаем счетчик после завершения работы горутины
-			work()
+			work()          // Вызываем функцию work
 		}()
 	}
 
+	// Ожидаем завершения всех горутин
 	wg.Wait()
+	fmt.Println("Все работы завершены")
 }
